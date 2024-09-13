@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { TriangleAlert } from "lucide-react";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 // ICONS
 import { FaGithub, FaLinkedin } from "react-icons/fa";
@@ -21,9 +23,38 @@ interface SignInCardProps {
 }
 
 const SignUpCard = ({ setState }: SignInCardProps) => {
+
+  const { signIn } = useAuthActions();
+  
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handlePasswordSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+
+    setIsLoading(true)
+    signIn("password", { email, password, flow: "signUp" })
+        .catch(() => {
+          setError("Something went wrong")
+        })
+        .finally(() => {
+          setIsLoading(false)
+        })
+
+  }
+
+  const handleProviderSignUp = (value: "github" | "google") => {
+    setIsLoading(true)
+    signIn(value).finally(() => { setIsLoading(false) })
+  }
   
   return (
     <Card className="w-full h-full p-8">
@@ -35,10 +66,17 @@ const SignUpCard = ({ setState }: SignInCardProps) => {
         </CardDescription>
       </CardHeader>
 
+      {!!error && (
+        <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+          <TriangleAlert className="size-4" />
+          <p>{error}</p>
+        </div>
+      )}
+
       <CardContent className="space-y-5 px-0 pb-0">
-        <form action="" className="space-y-2.5">
+        <form onSubmit={handlePasswordSignUp} className="space-y-2.5">
           <Input
-            disabled={false}
+            disabled={isLoading}
             value={email}
             onChange={(e) => { setEmail(e.target.value) }}
             placeholder="Email"
@@ -50,7 +88,7 @@ const SignUpCard = ({ setState }: SignInCardProps) => {
             }}
           />
           <Input
-            disabled={false}
+            disabled={isLoading}
             value={password}
             onChange={(e) => { setPassword(e.target.value) }}
             placeholder="Password"
@@ -62,7 +100,7 @@ const SignUpCard = ({ setState }: SignInCardProps) => {
             }}
           />
           <Input
-            disabled={false}
+            disabled={isLoading}
             value={confirmPassword}
             onChange={(e) => { setConfirmPassword(e.target.value) }}
             placeholder="Confirm password"
@@ -79,7 +117,7 @@ const SignUpCard = ({ setState }: SignInCardProps) => {
             type="submit"
             className="w-full text-white"
             size={"lg"}
-            disabled={false}
+            disabled={isLoading}
             style={{
               outline: "none",
               boxShadow: "none",
@@ -94,8 +132,8 @@ const SignUpCard = ({ setState }: SignInCardProps) => {
         <div className="flex flex-row gap-x-2.5">
 
           <Button
-            disabled={false}
-            onClick={() => {}}
+            disabled={isLoading}
+            onClick={() => handleProviderSignUp("google")}
             variant={'outline'}
             size={'lg'}
             className="w-full flex items-center justify-center"
@@ -105,8 +143,8 @@ const SignUpCard = ({ setState }: SignInCardProps) => {
           </Button>
 
           <Button
-            disabled={false}
-            onClick={() => {}}
+            disabled={isLoading}
+            onClick={() => handleProviderSignUp("github")}
             variant={'outline'}
             size={'lg'}
             className="w-full flex items-center justify-center"
@@ -116,7 +154,7 @@ const SignUpCard = ({ setState }: SignInCardProps) => {
           </Button>
 
           <Button
-            disabled={false}
+            disabled={isLoading}
             onClick={() => {}}
             variant={'outline'}
             size={'lg'}
