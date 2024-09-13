@@ -16,6 +16,7 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FcGoogle } from 'react-icons/fc'
 
 import { SignInFlow } from "../types";
+import { TriangleAlert } from "lucide-react";
 
 interface SignInCardProps {
   setState: React.Dispatch<React.SetStateAction<SignInFlow>>;
@@ -27,9 +28,25 @@ const SignInCard = ({ setState }: SignInCardProps) => {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handlePasswordSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    setIsLoading(true)
+    signIn("password", { email, password, flow: "signIn" })
+        .catch(() => {
+          setError("Invalid email or password")
+        })
+        .finally(() => {
+          setIsLoading(false)
+        })
+  }
 
   const handleProviderSignIn = (value: "github" | "google") => {
-    signIn(value)
+    setIsLoading(true)
+    signIn(value).finally(() => { setIsLoading(false) })
   }
   
   return (
@@ -42,10 +59,17 @@ const SignInCard = ({ setState }: SignInCardProps) => {
         </CardDescription>
       </CardHeader>
 
+      {!!error && (
+        <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+          <TriangleAlert className="size-4" />
+          <p>{error}</p>
+        </div>
+      )}
+
       <CardContent className="space-y-5 px-0 pb-0">
-        <form action="" className="space-y-2.5">
+        <form className="space-y-2.5" onSubmit={handlePasswordSignIn}>
           <Input
-            disabled={false}
+            disabled={isLoading}
             value={email}
             onChange={(e) => { setEmail(e.target.value) }}
             placeholder="Email"
@@ -57,7 +81,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
             }}
           />
           <Input
-            disabled={false}
+            disabled={isLoading}
             value={password}
             onChange={(e) => { setPassword(e.target.value) }}
             placeholder="Password"
@@ -74,7 +98,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
             type="submit"
             className="w-full text-white"
             size={"lg"}
-            disabled={false}
+            disabled={isLoading}
             style={{
               outline: "none",
               boxShadow: "none",
@@ -89,7 +113,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
         <div className="flex flex-row gap-x-2.5">
 
           <Button
-            disabled={false}
+            disabled={isLoading}
             onClick={() => handleProviderSignIn("google")}
             variant={'outline'}
             size={'lg'}
@@ -100,7 +124,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
           </Button>
 
           <Button
-            disabled={false}
+            disabled={isLoading}
             onClick={() => handleProviderSignIn("github")}
             variant={'outline'}
             size={'lg'}
@@ -111,7 +135,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
           </Button>
 
           <Button
-            disabled={false}
+            disabled={isLoading}
             onClick={() => {}}
             variant={'outline'}
             size={'lg'}
