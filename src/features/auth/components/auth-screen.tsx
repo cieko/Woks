@@ -8,8 +8,8 @@ export const AuthScreen = () => {
 
   const [state, setState] = useState<SignInFlow>("signIn")
   return (
-    <div className="h-full w-full flex items-center justify-center ">
-      <Button variant={'woks'}>Hey</Button>
+    <div className="h-full w-full flex items-center justify-center bg-secondary">
+      
     </div>
   )
 }
