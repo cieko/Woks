@@ -51,7 +51,7 @@ const SignUpCard = ({ setState }: SignInCardProps) => {
 
   }
 
-  const handleProviderSignUp = (value: "github" | "google") => {
+  const handleProviderSignUp = (value: "github" | "google" | "linkedin") => {
     setIsLoading(true)
     signIn(value).finally(() => { setIsLoading(false) })
   }
@@ -155,7 +155,7 @@ const SignUpCard = ({ setState }: SignInCardProps) => {
 
           <Button
             disabled={isLoading}
-            onClick={() => {}}
+            onClick={() => handleProviderSignUp("linkedin")}
             variant={'outline'}
             size={'lg'}
             className="w-full flex items-center justify-center"

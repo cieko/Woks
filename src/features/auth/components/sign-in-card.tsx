@@ -44,7 +44,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
         })
   }
 
-  const handleProviderSignIn = (value: "github" | "google") => {
+  const handleProviderSignIn = (value: "github" | "google" | "linkedin") => {
     setIsLoading(true)
     signIn(value).finally(() => { setIsLoading(false) })
   }
@@ -136,7 +136,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
 
           <Button
             disabled={isLoading}
-            onClick={() => {}}
+            onClick={() => handleProviderSignIn("linkedin")}
             variant={'outline'}
             size={'lg'}
             className="w-full flex items-center justify-center"
