@@ -4,8 +4,12 @@ import { useEffect, useMemo } from "react";
 import { UserButton } from "@/features/auth/components/user-button";
 
 import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
+import { useCreateWorkspaceModal } from "@/features/workspaces/store/use-create-workspce-modal";
 
 export default function Home() {
+
+  const [open, setOpen] = useCreateWorkspaceModal();
+
   const { data, isLoading } = useGetWorkspaces();
 
   const workspaceId = useMemo(() => data?.[0]?._id, [data]);
@@ -15,10 +19,10 @@ export default function Home() {
 
     if (workspaceId) {
       console.log("Redirect to workspace")
-    } else {
-      console.log("Open creation model")
+    } else if (!open) {
+      setOpen(true)
     }
-  }, [isLoading, workspaceId])
+  }, [isLoading, open, setOpen, workspaceId])
 
   return (
     <main>
