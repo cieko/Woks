@@ -1,3 +1,4 @@
+import { toast } from 'sonner'
 import {
   Dialog,
   DialogContent,
@@ -24,7 +25,7 @@ export const CreateWorkspaceModal = () => {
   const handleClose = () => {
     setOpen(false)
     
-    // TODO: Clear form 2:08:00
+    setName('')
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,8 +34,10 @@ export const CreateWorkspaceModal = () => {
     mutate(
       { name },
       {
-        onSuccess(data) {
-            console.log(data)
+        onSuccess(id) {
+            toast.success("Workspace created")
+            router.push(`/workspace/${id}`)
+            handleClose()
         },
       }
     )

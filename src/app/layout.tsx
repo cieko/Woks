@@ -6,6 +6,7 @@ import { ConvexClientProvider } from "@/components/convex-client-provider";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 
 import { Modals } from "@/components/modals";
+import { Toaster } from '@/components/ui/sonner'
 
 import "./globals.css";
 
@@ -26,6 +27,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className} suppressHydrationWarning>
           <ConvexClientProvider>
+            <Toaster />
             <Modals />
             {children}
           </ConvexClientProvider>
